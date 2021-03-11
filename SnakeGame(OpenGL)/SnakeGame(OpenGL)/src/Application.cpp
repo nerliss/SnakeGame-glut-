@@ -3,23 +3,23 @@
 #include <stdlib.h>
 
 int N = 30, M = 20;
-int Scale = 25; // Scaling ratio
+int Scale = 25;//Scaling ratio
 
-int w = Scale * N; // Width
-int h = Scale * M; // Height
+int w = Scale * N;//Width
+int h = Scale * M;//Height
 
-int direction, // Direction takes a value from 0 to 4
-	num = 4; // Original size of the snake
+int direction,//Direction takes a value from 0 to 4
+	num = 4;//Original size of the snake
 
 struct 
 {
 	int x;
 	int y;
 }
-s[100]; // Max size of the snake
+s[100];//Max size of the snake
 
-// Pickups
-class Pickups
+//Fruits
+class Fruits
 {
 public:
 	int x, y;
@@ -34,9 +34,9 @@ public:
 		glRectf(x * Scale, y * Scale, (x + 1) * Scale, (y + 1) * Scale);
 	}
 }
-arr[10]; // Array of ten Apples
+arr[10];//Array of ten Apples
 
-// Drawing the field of the game
+//Drawing the field of the game
 void DrawField()
 {
 	glBegin(GL_LINES);
@@ -55,7 +55,7 @@ void DrawField()
 	glEnd();
 }
 
-// Drawing the snake
+//Drawing the snake
 void DrawSnake()
 {
 	glColor3f(0.0, 0.0, 1.0);
@@ -66,23 +66,23 @@ void DrawSnake()
 }
 
 
-// Snake moving
+//Snake moving
 void Tick()
 {
-	// Moving to the next position
+	//Moving to the next position
 	for (int i = num; i>0; --i)
 	{
 		s[i].x = s[i - 1].x;		
 		s[i].y = s[i - 1].y;
 	}
 
-	// Direction of moving
-	if (direction == 0) s[0].y += 1; // Up
-	if (direction == 1) s[0].y -= 1; // Down
-	if (direction == 2) s[0].x += 1; // Right
-	if (direction == 3) s[0].x -= 1; // Left
+	//Direction of moving
+	if (direction == 0) s[0].y += 1;//Up
+	if (direction == 1) s[0].y -= 1;//Down
+	if (direction == 2) s[0].x += 1;//Right
+	if (direction == 3) s[0].x -= 1;//Left
 
-	// Picking an apple
+	//Eating an Apple
 	for (int i = 0; i < 10; i++)
 	{
 		if ((s[0].x==arr[i].x)&&(s[0].y==arr[i].y))
@@ -92,37 +92,37 @@ void Tick()
 		}
 	}
 
-	// !!!DOESNT WORK PROPERLY MIGHT CHANGE LATER. Turning the snake on hit with a border of the field 
+	//!!!DOESNT WORK PROPERLY MIGHT CHANGE LATER. Turning the snake on hit with a border of the field 
 	if (s[0].x > N) direction = 1;
 	if (s[0].x < 0) direction = 2;
 	if (s[0].y > M) direction = 3;
 	if (s[0].y < 0) direction = 0;
 
-	// Resizing the snake on hit with itself
+	//Resizing the snake on hit with itself
 	for (int i = 1; i < num; i++)
 		if (s[0].x == s[i].x && s[0].y == s[i].y) num = i;
 }
 
-// Setting the controls up
-void Controls(int key, int a, int b)
+//Controls
+void Keyboard(int key, int a, int b)
 {
 	switch (key)
 	{
-	case 101: direction = 0; // ArrowUp
+	case 101: direction = 0;//ArrowUp
 		break;
-	case 103: direction = 1; // ArrowDown
+	case 103: direction = 1;//ArrowDown
 		break;
-	case 102: direction = 2; // ArrowRight
+	case 102: direction = 2;//ArrowRight
 		break;
-	case 100: direction = 3; // ArrowLeft
+	case 100: direction = 3;//ArrowLeft
 		break;
 	}
 }
 
-// Displaying on screen 
+//Displays on screen things I draw 
 void display()
 {
-	glClear(GL_COLOR_BUFFER_BIT); // Screen clean
+	glClear(GL_COLOR_BUFFER_BIT);//Screen clean
 	DrawField();
 	DrawSnake();
 
@@ -132,7 +132,7 @@ void display()
 	glFlush();
 }
 
-// Tick timer
+//Changing subjects every time. 50ms in my case
 void timer(int = 0)
 {
 	display();
@@ -155,15 +155,15 @@ int main(int argc, char **argv)
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(w, h); // Resolution
-	glutCreateWindow("Snake"); // Name of the window
+	glutInitWindowSize(w, h); //Resolution
+	glutCreateWindow("Snake"); //Name of the window
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0, 640, 0, 480);
 
-	glutDisplayFunc(display); // Displaying of a function
-	glutTimerFunc(100, timer, 0); // Declaring Timer function
-	glutSpecialFunc(Controls);
+	glutDisplayFunc(display); //Displaying of a function. void display in my case
+	glutTimerFunc(100, timer, 0); //Declaring Timer function. void timer in my case
+	glutSpecialFunc(Keyboard);
 	
 	glutMainLoop();
 }
